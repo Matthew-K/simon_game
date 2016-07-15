@@ -1,0 +1,96 @@
+.circle {
+    position: relative;
+	border-radius: 50%;
+	width: 450px;
+	height: 450px; 
+	background: #777;
+	margin: 50px auto 0 auto;
+}
+
+.color-choice {
+    height: 225px;
+    width: 225px;
+    border-style: solid;
+    border-color: #777;
+}
+
+.top-left {
+    position: relative;
+	background-color: green;
+    border-width: 16px 8px 8px 16px;
+    border-radius: 225px 0 0 0;
+}
+
+.top-right {
+	position: relative;
+    left: 225px;
+    bottom: 225px;
+	background-color: red;
+    border-width: 16px 16px 8px 8px;
+    border-radius: 0 225px 0 0;
+}
+
+.bottom-left {
+	position: relative;
+    bottom: 225px;
+	background-color: yellow;
+    border-width: 8px 8px 16px 16px;
+    border-radius: 0 0 0 225px;
+}
+
+.bottom-right {
+	position: relative;
+	bottom: 450px;
+	left: 225px;
+	background-color: blue;
+    border-width: 8px 16px 16px 8px;
+    border-radius: 0 0 225px 0;
+}
+
+.center {
+    position: absolute;
+    top: calc(50% - 125px);
+    left: calc(50% - 125px);
+    background: #ddd;
+    height: 250px;
+    width: 250px;
+    border-radius: 50%;
+    text-align: center;
+}
+
+.center h1{
+    text-align: center;
+}
+
+.container {
+    max-width: 225px;
+}
+
+.top-buttons>div {
+    float: left;
+}
+
+.count {
+    height: 75px;
+    width: 75px;
+    background: #fff;
+    font-size: 25px;
+    line-height: 75px;
+}
+
+.btn-custom  {
+    margin: 0 auto;
+    background: red;
+    height: 40px;
+    width: 40px;
+    border: 3px solid black;
+    border-radius: 50%;
+}
+
+.strict .btn-custom {
+    background: yellow;
+}
+
+.power{
+    background: blue;
+}
