@@ -1,3 +1,14 @@
+* {
+    font-family: 'Droid Sans', sans-serif;
+}
+
+body {
+    background-image: url("../img/paper_fibers.png"); 
+    /*http://subtlepatterns.com/paper-fibers/*/
+}
+
+
+
 .circle {
     position: relative;
 	border-radius: 50%;
@@ -7,59 +18,72 @@
 	margin: 50px auto 0 auto;
 }
 
+
+
+/* Color Choices
+============================================================================ */
+
 .color-choice {
-    height: 225px;
-    width: 225px;
+    height: 50%;
+    width: 50%;
     border-style: solid;
-    border-color: #777;
+    border-color: #333;
 }
 
 .top-left {
     position: relative;
-	background-color: green;
+	background-color: #00C34F;
     border-width: 16px 8px 8px 16px;
-    border-radius: 225px 0 0 0;
+    border-radius: 100% 0 0 0;
 }
 
 .top-right {
 	position: relative;
-    left: 225px;
-    bottom: 225px;
-	background-color: red;
+    left: 50%;
+    bottom: 50%;
+	background-color: #FE001E;
     border-width: 16px 16px 8px 8px;
-    border-radius: 0 225px 0 0;
+    border-radius: 0 100% 0 0;
 }
 
 .bottom-left {
 	position: relative;
-    bottom: 225px;
-	background-color: yellow;
+    bottom: 50%;
+	background-color: #FFDF00;
     border-width: 8px 8px 16px 16px;
-    border-radius: 0 0 0 225px;
+    border-radius: 0 0 0 100%;
 }
 
 .bottom-right {
 	position: relative;
-	bottom: 450px;
-	left: 225px;
-	background-color: blue;
+	bottom: 100%;
+	left: 50%;
+	background-color: #03A9F4;
     border-width: 8px 16px 16px 8px;
-    border-radius: 0 0 225px 0;
+    border-radius: 0 0 100% 0;
 }
 
-.center {
+
+
+/* Options / Score
+============================================================================ */
+
+.options-and-score {
     position: absolute;
-    top: calc(50% - 125px);
-    left: calc(50% - 125px);
-    background: #ddd;
-    height: 250px;
-    width: 250px;
+    top: calc(50% - 113px);
+    left: calc(50% - 113px);
+    background: #fff;
+    height: 226px;
+    width: 226px;
     border-radius: 50%;
     text-align: center;
 }
 
-.center h1{
+.options-and-score h1 {
     text-align: center;
+    margin-top: 30px;
+    margin-bottom: 15px;
+    font-family: 'Alfa Slab One', cursive;
 }
 
 .container {
@@ -70,27 +94,95 @@
     float: left;
 }
 
+.top-buttons {
+    margin-bottom: 15px;
+}
+
 .count {
-    height: 75px;
-    width: 75px;
-    background: #fff;
+    height: 65px;
+    width: 65px;
+    color: #DC0D29;
+    background: #32050C;
     font-size: 25px;
-    line-height: 75px;
+    line-height: 65px;
+    border-radius: 10px;
+    border: 3px solid #333;
+    margin-left: 10px;
+    margin-right: 10px;
 }
 
 .btn-custom  {
     margin: 0 auto;
-    background: red;
+    background: #f44336;
     height: 40px;
     width: 40px;
-    border: 3px solid black;
+    border: 3px solid #333;
     border-radius: 50%;
 }
 
-.strict .btn-custom {
-    background: yellow;
+.btn-custom:hover{
+    cursor: pointer;
 }
 
-.power{
-    background: blue;
+.strict .btn-custom {
+    background: #F4DF36;
+}
+
+.power .btn-custom{
+    background: #4091A8;
+    font-size: 16px;
+    color: #fff;
+    line-height: 40px;
+}
+
+.start {
+    margin-right: 10px;
+}
+
+.strict {
+    position: relative;
+}
+
+.strict .light {
+    position: absolute;
+    top: 0;
+    left: 90%;
+    height: 10px;
+    width: 10px;
+    background: #d32f2f;
+    border-radius: 50%;
+}
+
+
+
+/* Media Queries
+============================================================================ */
+
+@media (max-width: 500px) {
+    .circle {
+        width: 350px;
+        height: 350px; 
+    }
+
+    .options-and-score {
+        top: calc(50% - 107px);
+        left: calc(50% - 107px);
+        height: 214px;
+        width: 214px;
+    }
+}
+
+@media (max-width: 375px) {
+    .circle {
+        width: 250px;
+        height: 250px; 
+    }
+
+    .options-and-score {
+        top: calc(270px);
+        left: calc(50% - 112px);
+        height: 224px;
+        width: 224px;
+        border: 3px solid #333;
+    }
 }
