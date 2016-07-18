@@ -132,7 +132,7 @@ body {
     background: #F4DF36;
 }
 
-.power {
+.power .btn-custom{
     background: #4091A8;
     font-size: 16px;
     color: #fff;

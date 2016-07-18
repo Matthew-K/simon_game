@@ -18,13 +18,15 @@ var controller = {
 
 	updatePower: function(offOrOn) {
 		data.power = offOrOn;
-		console.log(data.power);
+	},
+
+	updateStart: function() {
+		data.start = "start";
 	},
 
 	getPower: function() {
 		return data.power;
-	}
-
+	},
 
 };
 
@@ -34,19 +36,53 @@ var controller = {
 var view = {
 
 	init: function() {
-		view.powerButton();
+		view.powerButtonClickHandler();
 	},
 
-	powerButton: function() {
-		$(".power").on("click", function() {
+	powerButtonClickHandler: function() {
+		$(".power .btn-custom").on("click", function() {
 			if (controller.getPower() === "off") {
 				controller.updatePower("on");
-				$(".count").addClass("on");	
+				view.powerOn();
 			} else {
 				controller.updatePower("off");
-				$(".count").removeClass("on");	
+				view.powerOff();	
 			}
 		});
+	},
+
+	startButtonClickHandler: function() {
+		$(".start .btn-custom").on("click", function() {
+			controller.updateStart();
+			view.flashStart();
+		});
+	},
+
+	// Counter flashes
+	flashStart: function() {
+  		var counter = 1;
+  		var interval = setInterval(function() {
+  			start();
+  		});
+  		function start() {
+  			$('.count-text').fadeOut(150);
+    		$('.count-text').fadeIn(150);
+  		    if(counter == 3) {
+  		        clearInterval(interval);
+  		    } else {
+  		        counter++;
+  		    }
+  		}
+	},
+
+	powerOn: function() {
+		$(".count").addClass("on");	
+		view.startButtonClickHandler();
+	},
+
+	powerOff: function() {
+		$(".count").removeClass("on");
+		$(".start .btn-custom").off("click");
 	}
 
 };
