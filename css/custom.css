@@ -101,7 +101,7 @@ body {
 .count {
     height: 65px;
     width: 65px;
-    color: #DC0D29;
+    color: #4d040e;
     background: #32050C;
     font-size: 25px;
     line-height: 65px;
@@ -109,6 +109,10 @@ body {
     border: 3px solid #333;
     margin-left: 10px;
     margin-right: 10px;
+}
+
+.on {
+    color: #DC0D29;
 }
 
 .btn-custom  {
@@ -128,7 +132,7 @@ body {
     background: #F4DF36;
 }
 
-.power .btn-custom{
+.power {
     background: #4091A8;
     font-size: 16px;
     color: #fff;
