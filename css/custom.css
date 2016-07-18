@@ -63,6 +63,25 @@ body {
     border-radius: 0 0 100% 0;
 }
 
+.bright-green {
+    background-color: hsla(144, 100%, 58%, 1.0);
+    box-shadow: inset 0px 0px 100px 8px rgba(255,255,255,0.6);
+}
+
+.bright-red {
+    background-color: hsla(352, 100%, 69%, 1.0);
+    box-shadow: inset 0px 0px 100px 8px rgba(255,255,255,0.6);
+}
+
+.bright-yellow {
+    background-color: hsla(52, 100%, 70%, 1.0);
+    box-shadow: inset 0px 0px 100px 8px rgba(255,255,255,0.6);
+}
+
+.bright-blue {
+    background-color: hsla(198, 97%, 68%, 1.0);
+    box-shadow: inset 0px 0px 100px 8px rgba(255,255,255,0.6);
+}
 
 
 /* Options / Score
