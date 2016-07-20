@@ -7,9 +7,9 @@ var data = {
 	power: "off",
 
 	// "computer" or "user"
-	whoseTurn: "computer",
+	whoseTurn: "user",
 
-	computerMoves: [],
+	computerMoves: ["top-left", "top-right", "top-left", "bottom-right", "bottom-right", "bottom-left"],
 
 	userMoves: [],
 
@@ -60,11 +60,73 @@ var controller = {
 		return data.computerMoves;
 	},
 
+	getUserMoves: function() {
+		return data.userMoves;
+	},
+
 
 	computerMove: function() {
 		var move = controller.chooseRandomMove();
 		controller.updateMoves(move);
 		view.flashComputerMoves();
+	},
+
+	userMove: function() {
+		// add pointer classes
+		view.addPointerClasses();
+		view.addActiveClasses();
+		// while (data.userMoves.length < data.computerMoves.length) {
+		// 	var currentMove = controller.currentMove();
+		// }
+		controller.currentMove();
+		// controller.updateMoves(currentMove);
+		// data.userMoves.push(currentMove);
+
+		// if (data.userMoves[data.userMoves.length - 1] !== data.computerMoves[data.userMoves.length -1]) {
+		// 	console.log("Broken");
+		// }
+		// controller.checkMove(currentMove);
+
+		// }
+		// if button clicked matches computer's move
+			// remove pointer classes
+			// computer's turn
+		// if not, have computer, redo move
+		// if so, remove pointer classes
+
+	},
+
+	currentMove: function() {
+		
+		$(".top-left").on("click", function() {
+			var index = controller.getUserMoves().length;
+			controller.updateAndCheckUserMove("top-left", index);
+		});
+		$(".top-right").on("click", function() {
+			var index = controller.getUserMoves().length;
+			controller.updateAndCheckUserMove("top-right", index);
+		});
+		$(".bottom-left").on("click", function() {
+			var index = controller.getUserMoves().length;
+			controller.updateAndCheckUserMove("bottom-left", index);
+		});
+		$(".bottom-right").on("click", function() {
+			var index = controller.getUserMoves().length;
+			controller.updateAndCheckUserMove("bottom-right", index);
+		});
+	},
+
+	updateAndCheckUserMove: function(move, index) {
+		controller.updateMoves(move);
+		var userMoves = controller.getUserMoves();
+		var computerMoves = controller.getComputerMoves();
+		console.log("===========")
+		console.log(userMoves[index]);
+		console.log(computerMoves[index]);
+		if (userMoves[index] !== computerMoves[index]) {
+			console.log("Broken");
+		}
+
 	},
 
 	chooseRandomMove: function() {
@@ -173,12 +235,24 @@ var view = {
 		    integer++;
 		    if(integer === moves.length) {
 		        clearInterval(timeInterval);
+		        controller.userMove();
 		    }
 		}, 1500);
 	},
 
 	singleFlash: function(button, flashColorClass) {
 		setTimeout(function(){$("." + button).removeClass(flashColorClass);}, 1000);
+	},
+
+	addPointerClasses: function() {
+		$(".color-choice").addClass("pointer");
+	},
+
+	addActiveClasses: function() {
+		$(".top-left").addClass("active-green");
+		$(".top-right").addClass("active-red");
+		$(".bottom-left").addClass("active-yellow");
+		$(".bottom-right").addClass("active-blue");
 	}
 }; // End of view
 
