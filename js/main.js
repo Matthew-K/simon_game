@@ -9,8 +9,6 @@ var data = {
 	// "computer" or "user"
 	whoseTurn: "computer",
 
-	start: '',
-
 	computerMoves: [],
 
 	userMoves: [],
@@ -34,14 +32,17 @@ var controller = {
 		data.power = offOrOn;
 	},
 
-	updateStart: function() {
-		data.start = "start";
+	updateWhoseTurn: function(whoseTurn) {
+		view.whoseTurn = whoseTurn;
 	},
 
 	updateMoves: function(move) {
-		if (controller.getWhoseTurn() === "computer") {
+		if (move === "reset") {
+			data.computerMoves = [];
+			data.userMoves = [];
+		} else if (controller.getWhoseTurn() === "computer") {
 			data.computerMoves.push(move);
-		} else {
+		} else if (controller.getWhoseTurn() === "user") {
 			data.userMoves.push(move);
 		}
 	},
@@ -91,6 +92,11 @@ var controller = {
 			case "bottom-right":
 				return "bright-blue";
 		}
+	},
+
+	resetGame: function() {
+		controller.updateMoves("reset");
+		controller.updateWhoseTurn("computer");
 	}
 }; // End of controller
 
@@ -120,7 +126,7 @@ var view = {
 
 	startButtonClickHandler: function() {
 		$(".start .btn-custom").on("click", function() {
-			controller.updateStart();
+			controller.resetGame();
 			view.flashStart();
 		});
 	},
@@ -128,14 +134,17 @@ var view = {
 	// Counter flashes when start button is clicked
 	flashStart: function() {
   		var counter = 1;
+  		start();
   		var interval = setInterval(function() {
   			start();
-  		});
+  		}, 400);
   		function start() {
   			$('.count-text').fadeOut(150);
     		$('.count-text').fadeIn(150);
-  		    if(counter == 3) {
+    		// When the flashing is over, clear the interval and have the computer start its first move.
+  		    if(counter === 3) {
   		        clearInterval(interval);
+  		        controller.computerMove();
   		    } else {
   		        counter++;
   		    }
@@ -169,7 +178,7 @@ var view = {
 	},
 
 	singleFlash: function(button, flashColorClass) {
-		window.setTimeout(function(){$("." + button).removeClass(flashColorClass);}, 1000);
+		setTimeout(function(){$("." + button).removeClass(flashColorClass);}, 1000);
 	}
 }; // End of view
 
