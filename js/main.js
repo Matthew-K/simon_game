@@ -1,27 +1,34 @@
 /* Data 
-==================================================*/
+====================================================================================================
+====================================================================================================*/
 var data = {
+
 	// "on" or "off"
 	power: "off",
 
 	// "computer" or "user"
 	whoseTurn: "computer",
 
+	start: '',
+
 	computerMoves: [],
 
 	userMoves: [],
 
-};
+}; // End of data
+
 
 
 
 /* Controller 
-==================================================*/
+====================================================================================================
+====================================================================================================*/
 var controller = {
 
 	init: function() {
 		view.init();
 	},
+
 
 	updatePower: function(offOrOn) {
 		data.power = offOrOn;
@@ -31,29 +38,35 @@ var controller = {
 		data.start = "start";
 	},
 
+	updateMoves: function(move) {
+		if (controller.getWhoseTurn() === "computer") {
+			data.computerMoves.push(move);
+		} else {
+			data.userMoves.push(move);
+		}
+	},
+
+
 	getPower: function() {
 		return data.power;
-	},
-
-	computerMove: function() {
-		var color = controller.chooseRandomColor();
-		controller.addColor(color);
-		view.flashComputerMoves();
-	},
-
-	addColor: function(color) {
-		if (controller.getWhoseTurn() === "computer") {
-			data.computerMoves.push(color);
-		} else {
-			data.userMoves.push(color);
-		}
 	},
 
 	getWhoseTurn: function() {
 		return data.whoseTurn;
 	},
 
-	chooseRandomColor: function() {
+	getComputerMoves: function() {
+		return data.computerMoves;
+	},
+
+
+	computerMove: function() {
+		var move = controller.chooseRandomMove();
+		controller.updateMoves(move);
+		view.flashComputerMoves();
+	},
+
+	chooseRandomMove: function() {
 		var num = Math.floor((Math.random() * 4) + 1);
 		switch(num) {
 			case 1:
@@ -67,12 +80,7 @@ var controller = {
 		}
 	},
 
-	getComputerMoves: function() {
-		return data.computerMoves;
-	},
-
-
-	getFlashColor: function(move) {
+	chooseFlashColor: function(move) {
 		switch(move) {
 			case "top-left":
 				return "bright-green";
@@ -84,11 +92,14 @@ var controller = {
 				return "bright-blue";
 		}
 	}
-};
+}; // End of controller
+
+
 
 
 /* View 
-==================================================*/
+====================================================================================================
+====================================================================================================*/
 var view = {
 
 	init: function() {
@@ -114,7 +125,7 @@ var view = {
 		});
 	},
 
-	// Counter flashes
+	// Counter flashes when start button is clicked
 	flashStart: function() {
   		var counter = 1;
   		var interval = setInterval(function() {
@@ -142,46 +153,24 @@ var view = {
 	},
 
 	flashComputerMoves: function() {
-		// var moves = controller.getComputerMoves();
-		// var flashMovesList = controller.createFlashMovesList();
-		// function flashTheColor(flashColor) {
-		// 	setTimeout(function() { console.log(flashColor); }, 2000);
-		// }
-
-		// for (var i = 0; i < moves.length; i++) {
-		// 	// flash color or moves[i];
-		// 	// console.log(controller.getFlashColor(moves[i]));
-		// 	var flashColor = controller.getFlashColor(moves[i]);
-		// 	// $("." + moves[i]).addClass(flashColor);
-		// 	flashTheColor(flashColor);
-
-		// }
-
-		// function doSetTimeout(i) {
-		//   setTimeout(function() { alert(i); }, 100);
-		// }
-
-		// for (var i = 1; i <= 2; ++i)
-		//   doSetTimeout(i);
-		//setInterval(function(){ console.log(i); }, 500);
-
-		//var list = Array(...);
-
 		var moves = controller.getComputerMoves();
-		
-
 		var integer = 0;
 		var flashColor = '';
-		var i = setInterval(function(){
-		    // do your thing
-		    flashColor = controller.getFlashColor(moves[integer]);
-		    console.log(flashColor);
+		var timeInterval = setInterval(function(){
+		    var button = moves[integer];
+			var flashColorClass = controller.chooseFlashColor(moves[integer]);
+		    $("." + button).addClass(flashColorClass);
+		    view.singleFlash(button, flashColorClass);
 		    integer++;
 		    if(integer === moves.length) {
-		        clearInterval(i);
+		        clearInterval(timeInterval);
 		    }
-		}, 1000);
+		}, 1500);
+	},
+
+	singleFlash: function(button, flashColorClass) {
+		window.setTimeout(function(){$("." + button).removeClass(flashColorClass);}, 1000);
 	}
-};
+}; // End of view
 
 controller.init();
