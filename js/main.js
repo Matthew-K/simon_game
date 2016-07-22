@@ -7,9 +7,9 @@ var data = {
 	power: "off",
 
 	// "computer" or "user"
-	whoseTurn: "user",
+	whoseTurn: "computer",
 
-	computerMoves: ["top-left", "top-right", "top-left", "bottom-right", "bottom-right", "bottom-left"],
+	computerMoves: ["top-left", "top-right", "bottom-left", "bottom-right"],
 
 	userMoves: [],
 
@@ -97,7 +97,6 @@ var controller = {
 	},
 
 	currentMove: function() {
-		
 		$(".top-left").on("click", function() {
 			var index = controller.getUserMoves().length;
 			controller.updateAndCheckUserMove("top-left", index);
@@ -225,6 +224,7 @@ var view = {
 
 	flashComputerMoves: function() {
 		var moves = controller.getComputerMoves();
+		console.log(moves);
 		var integer = 0;
 		var flashColor = '';
 		var timeInterval = setInterval(function(){
@@ -253,6 +253,21 @@ var view = {
 		$(".top-right").addClass("active-red");
 		$(".bottom-left").addClass("active-yellow");
 		$(".bottom-right").addClass("active-blue");
+	},
+
+	removeColorChoiceClickHandlers: function() {
+		$(".color-choice").off("click");
+	},
+
+	removeActiveClasses: function() {
+		$(".top-left").removeClass("active-green");
+		$(".top-right").removeClass("active-red");
+		$(".bottom-left").removeClass("active-yellow");
+		$(".bottom-right").removeClass("active-blue");
+	},
+
+	removePointerClasses: function() {
+		$(".color-choice").removeClass("pointer");
 	}
 }; // End of view
 
