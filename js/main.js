@@ -124,7 +124,7 @@ var controller = {
 		console.log(computerMoves[index]);
 		if (userMoves[index] !== computerMoves[index]) {
 			controller.updateUserMoves("reset");
-			view.userCantChoose();
+			view.flashWrongChoice();
 			view.flashComputerMoves();
 		}
 		if (controller.getUserMoves().length === controller.getComputerMoves().length) {
@@ -204,6 +204,7 @@ var view = {
 	// Counter flashes when start button is clicked
 	flashStart: function() {
   		var counter = 1;
+  		$(".count-text").html("--");
   		start();
   		var interval = setInterval(function() {
   			start();
@@ -221,12 +222,33 @@ var view = {
   		}
 	},
 
+	flashWrongChoice: function() {
+  		var counter = 1;
+  		$(".count-text").html("X");
+  		start();
+  		var interval = setInterval(function() {
+  			start();
+  		}, 400);
+  		function start() {
+  			$('.count-text').fadeOut(150);
+    		$('.count-text').fadeIn(150);
+    		// When the flashing is over, clear the interval and have the computer start its first move.
+  		    if(counter === 3) {
+  		        clearInterval(interval);
+  		        view.flashComputerMoves();
+  		    } else {
+  		        counter++;
+  		    }
+  		}
+	},
+
 	powerOn: function() {
 		$(".count").addClass("on");	
 		view.startButtonClickHandler();
 	},
 
 	powerOff: function() {
+		$(".count-text").html("--");
 		$(".count").removeClass("on");
 		$(".start .btn-custom").off("click");
 	},
