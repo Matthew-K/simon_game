@@ -33,16 +33,32 @@ var controller = {
 	},
 
 	updateWhoseTurn: function(whoseTurn) {
-		view.whoseTurn = whoseTurn;
+		data.whoseTurn = whoseTurn;
 	},
 
-	updateMoves: function(move) {
+	// updateMoves: function(move) {
+	// 	if (move === "reset") {
+	// 		data.computerMoves = [];
+	// 		data.userMoves = [];
+	// 	} else if (controller.getWhoseTurn() === "computer") {
+	// 		data.computerMoves.push(move);
+	// 	} else if (controller.getWhoseTurn() === "user") {
+	// 		data.userMoves.push(move);
+	// 	}
+	// },
+
+	updateComputerMoves: function(move) {
 		if (move === "reset") {
 			data.computerMoves = [];
-			data.userMoves = [];
-		} else if (controller.getWhoseTurn() === "computer") {
+		} else {
 			data.computerMoves.push(move);
-		} else if (controller.getWhoseTurn() === "user") {
+		}
+	},
+
+	updateUserMoves: function(move) {
+		if (move === "reset") {
+			data.userMoves = [];
+		} else {
 			data.userMoves.push(move);
 		}
 	},
@@ -67,33 +83,17 @@ var controller = {
 
 	computerMove: function() {
 		var move = controller.chooseRandomMove();
-		controller.updateMoves(move);
+		controller.updateComputerMoves(move);
 		view.flashComputerMoves();
 	},
 
 	userMove: function() {
-		// add pointer classes
+		controller.updateWhoseTurn("user");
+		console.log("function controller.userMove called");
+		controller.updateUserMoves("reset");
 		view.addPointerClasses();
 		view.addActiveClasses();
-		// while (data.userMoves.length < data.computerMoves.length) {
-		// 	var currentMove = controller.currentMove();
-		// }
 		controller.currentMove();
-		// controller.updateMoves(currentMove);
-		// data.userMoves.push(currentMove);
-
-		// if (data.userMoves[data.userMoves.length - 1] !== data.computerMoves[data.userMoves.length -1]) {
-		// 	console.log("Broken");
-		// }
-		// controller.checkMove(currentMove);
-
-		// }
-		// if button clicked matches computer's move
-			// remove pointer classes
-			// computer's turn
-		// if not, have computer, redo move
-		// if so, remove pointer classes
-
 	},
 
 	currentMove: function() {
@@ -116,14 +116,22 @@ var controller = {
 	},
 
 	updateAndCheckUserMove: function(move, index) {
-		controller.updateMoves(move);
+		controller.updateUserMoves(move);
 		var userMoves = controller.getUserMoves();
 		var computerMoves = controller.getComputerMoves();
-		console.log("===========")
+		console.log("===========");
 		console.log(userMoves[index]);
 		console.log(computerMoves[index]);
 		if (userMoves[index] !== computerMoves[index]) {
-			console.log("Broken");
+			controller.updateUserMoves("reset");
+			view.userCantChoose();
+			view.flashComputerMoves();
+		}
+		if (controller.getUserMoves().length === controller.getComputerMoves().length) {
+			controller.updateWhoseTurn("computer");
+			view.userCantChoose();
+			console.log("equal lengths");
+			controller.computerMove();
 		}
 
 	},
@@ -156,7 +164,8 @@ var controller = {
 	},
 
 	resetGame: function() {
-		controller.updateMoves("reset");
+		controller.updateComputerMoves("reset");
+		controller.updateUserMoves("reset");
 		controller.updateWhoseTurn("computer");
 	}
 }; // End of controller
@@ -253,6 +262,12 @@ var view = {
 		$(".top-right").addClass("active-red");
 		$(".bottom-left").addClass("active-yellow");
 		$(".bottom-right").addClass("active-blue");
+	},
+
+	userCantChoose: function() {
+		view.removeColorChoiceClickHandlers();
+		view.removeActiveClasses();
+		view.removePointerClasses();
 	},
 
 	removeColorChoiceClickHandlers: function() {
