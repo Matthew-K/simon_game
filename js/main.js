@@ -13,7 +13,7 @@ var data = {
 
 	userMoves: [],
 
-	// score: 0
+	score: 0
 
 }; // End of data
 
@@ -66,7 +66,7 @@ var controller = {
 	},
 
 	updateScore: function(num) {
-		view.score = num;
+		data.score = num;
 	},
 
 	getPower: function() {
@@ -145,6 +145,8 @@ var controller = {
 		} else if (controller.getUserMoves().length === controller.getComputerMoves().length) {
 			controller.updateWhoseTurn("computer");
 			view.userCantChoose();
+			// var newScore = controller.getScore() + 1;
+			controller.updateScore(controller.getScore() + 1);
 			// console.log("equal lengths");
 			controller.computerMove();
 		}
@@ -183,6 +185,7 @@ var controller = {
 		controller.updateUserMoves("reset");
 		controller.updateWhoseTurn("computer");
 		controller.updateScore(0);
+		view.userCantChoose();
 	}
 }; // End of controller
 
@@ -219,6 +222,7 @@ var view = {
 
 	// Counter flashes when start button is clicked
 	flashStart: function() {
+  		controller.updateScore(1);
   		var counter = 1;
   		$(".count-text").html("--");
   		start();
@@ -272,6 +276,7 @@ var view = {
 
 	flashComputerMoves: function() {
 		var moves = controller.getComputerMoves();
+		view.renderScore();
 		console.log("Computer Moves: " + moves);
 		console.log("--------------------------------");
 		// console.log(moves);
@@ -328,6 +333,7 @@ var view = {
 
 	renderScore: function() {
 		var currentScore = controller.getScore();
+		$(".count-text").html(currentScore);
 	}
 }; // End of view
 
