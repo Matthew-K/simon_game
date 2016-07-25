@@ -13,6 +13,8 @@ var data = {
 
 	userMoves: [],
 
+	// score: 0
+
 }; // End of data
 
 
@@ -63,6 +65,9 @@ var controller = {
 		}
 	},
 
+	updateScore: function(num) {
+		view.score = num;
+	},
 
 	getPower: function() {
 		return data.power;
@@ -80,6 +85,10 @@ var controller = {
 		return data.userMoves;
 	},
 
+	getScore: function() {
+		return data.score;
+	},
+
 
 	computerMove: function() {
 		var move = controller.chooseRandomMove();
@@ -88,8 +97,10 @@ var controller = {
 	},
 
 	userMove: function() {
-		controller.updateWhoseTurn("user");
-		console.log("function controller.userMove called");
+		// var currentScore = controller.getScore();
+		// controller.updateScore(currentScore++);
+		// view.renderScore(currentScore++);
+		// console.log("function controller.userMove called");
 		controller.updateUserMoves("reset");
 		view.addPointerClasses();
 		view.addActiveClasses();
@@ -117,20 +128,24 @@ var controller = {
 
 	updateAndCheckUserMove: function(move, index) {
 		controller.updateUserMoves(move);
+		console.log("User Moves: " + data.userMoves);
+		console.log("--------------------------------");
 		var userMoves = controller.getUserMoves();
 		var computerMoves = controller.getComputerMoves();
-		console.log("===========");
-		console.log(userMoves[index]);
-		console.log(computerMoves[index]);
+		// console.log("===========");
+		// console.log(userMoves[index]);
+		// console.log(computerMoves[index]);
 		if (userMoves[index] !== computerMoves[index]) {
+			// console.log("fffthis");
 			controller.updateUserMoves("reset");
+			// debugger;
+			view.userCantChoose();
 			view.flashWrongChoice();
-			view.flashComputerMoves();
-		}
-		if (controller.getUserMoves().length === controller.getComputerMoves().length) {
+			// view.flashComputerMoves();
+		} else if (controller.getUserMoves().length === controller.getComputerMoves().length) {
 			controller.updateWhoseTurn("computer");
 			view.userCantChoose();
-			console.log("equal lengths");
+			// console.log("equal lengths");
 			controller.computerMove();
 		}
 
@@ -167,6 +182,7 @@ var controller = {
 		controller.updateComputerMoves("reset");
 		controller.updateUserMoves("reset");
 		controller.updateWhoseTurn("computer");
+		controller.updateScore(0);
 	}
 }; // End of controller
 
@@ -235,6 +251,7 @@ var view = {
     		// When the flashing is over, clear the interval and have the computer start its first move.
   		    if(counter === 3) {
   		        clearInterval(interval);
+  		        controller.updateWhoseTurn("user");
   		        view.flashComputerMoves();
   		    } else {
   		        counter++;
@@ -255,7 +272,9 @@ var view = {
 
 	flashComputerMoves: function() {
 		var moves = controller.getComputerMoves();
-		console.log(moves);
+		console.log("Computer Moves: " + moves);
+		console.log("--------------------------------");
+		// console.log(moves);
 		var integer = 0;
 		var flashColor = '';
 		var timeInterval = setInterval(function(){
@@ -305,6 +324,10 @@ var view = {
 
 	removePointerClasses: function() {
 		$(".color-choice").removeClass("pointer");
+	},
+
+	renderScore: function() {
+		var currentScore = controller.getScore();
 	}
 }; // End of view
 
