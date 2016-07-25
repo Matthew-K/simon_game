@@ -9,14 +9,13 @@ var data = {
 	// "computer" or "user"
 	whoseTurn: "computer",
 
-	computerMoves: ["top-left", "top-right", "bottom-left", "bottom-right"],
+	computerMoves: [],
 
 	userMoves: [],
 
 	score: 0
 
 }; // End of data
-
 
 
 
@@ -29,6 +28,18 @@ var controller = {
 		view.init();
 	},
 
+	// Called when user clicks start button
+	resetGame: function() {
+		controller.updateComputerMoves("reset");
+		controller.updateUserMoves("reset");
+		controller.updateWhoseTurn("computer");
+		controller.updateScore(0);
+		view.userCantChoose();
+	},
+
+
+/* Update functions - Update data in data object
+===========================================================================*/
 
 	updatePower: function(offOrOn) {
 		data.power = offOrOn;
@@ -37,17 +48,6 @@ var controller = {
 	updateWhoseTurn: function(whoseTurn) {
 		data.whoseTurn = whoseTurn;
 	},
-
-	// updateMoves: function(move) {
-	// 	if (move === "reset") {
-	// 		data.computerMoves = [];
-	// 		data.userMoves = [];
-	// 	} else if (controller.getWhoseTurn() === "computer") {
-	// 		data.computerMoves.push(move);
-	// 	} else if (controller.getWhoseTurn() === "user") {
-	// 		data.userMoves.push(move);
-	// 	}
-	// },
 
 	updateComputerMoves: function(move) {
 		if (move === "reset") {
@@ -73,6 +73,10 @@ var controller = {
 		return data.power;
 	},
 
+
+/* Get functions - Get data from data object
+===========================================================================*/
+
 	getWhoseTurn: function() {
 		return data.whoseTurn;
 	},
@@ -90,17 +94,48 @@ var controller = {
 	},
 
 
+/* Functions used during computer's moves
+===========================================================================*/
+
 	computerMove: function() {
 		var move = controller.chooseRandomMove();
 		controller.updateComputerMoves(move);
 		view.flashComputerMoves();
 	},
 
+	chooseRandomMove: function() {
+		var num = Math.floor((Math.random() * 4) + 1);
+		switch(num) {
+			case 1:
+				return "top-left";
+			case 2:
+				return "top-right";
+			case 3:
+				return "bottom-left";
+			case 4:
+				return "bottom-right";
+		}
+	},
+
+	// Matches a move with its proper class
+	chooseFlashColor: function(move) {
+		switch(move) {
+			case "top-left":
+				return "bright-green";
+			case "top-right":
+				return "bright-red";
+			case "bottom-left":
+				return "bright-yellow";
+			case "bottom-right":
+				return "bright-blue";
+		}
+	},
+
+
+/* Functions used during user's moves
+===========================================================================*/
+
 	userMove: function() {
-		// var currentScore = controller.getScore();
-		// controller.updateScore(currentScore++);
-		// view.renderScore(currentScore++);
-		// console.log("function controller.userMove called");
 		controller.updateUserMoves("reset");
 		view.addPointerClasses();
 		view.addActiveClasses();
@@ -132,63 +167,22 @@ var controller = {
 		console.log("--------------------------------");
 		var userMoves = controller.getUserMoves();
 		var computerMoves = controller.getComputerMoves();
-		// console.log("===========");
-		// console.log(userMoves[index]);
-		// console.log(computerMoves[index]);
+		// If the user's move doesn't match the computer's, flash "X".
 		if (userMoves[index] !== computerMoves[index]) {
-			// console.log("fffthis");
 			controller.updateUserMoves("reset");
-			// debugger;
 			view.userCantChoose();
 			view.flashWrongChoice();
-			// view.flashComputerMoves();
+		// If the user has matched all the moves, update the score and have the computer add another move.
 		} else if (controller.getUserMoves().length === controller.getComputerMoves().length) {
 			controller.updateWhoseTurn("computer");
 			view.userCantChoose();
-			// var newScore = controller.getScore() + 1;
 			controller.updateScore(controller.getScore() + 1);
-			// console.log("equal lengths");
 			controller.computerMove();
 		}
-
-	},
-
-	chooseRandomMove: function() {
-		var num = Math.floor((Math.random() * 4) + 1);
-		switch(num) {
-			case 1:
-				return "top-left";
-			case 2:
-				return "top-right";
-			case 3:
-				return "bottom-left";
-			case 4:
-				return "bottom-right";
-		}
-	},
-
-	chooseFlashColor: function(move) {
-		switch(move) {
-			case "top-left":
-				return "bright-green";
-			case "top-right":
-				return "bright-red";
-			case "bottom-left":
-				return "bright-yellow";
-			case "bottom-right":
-				return "bright-blue";
-		}
-	},
-
-	resetGame: function() {
-		controller.updateComputerMoves("reset");
-		controller.updateUserMoves("reset");
-		controller.updateWhoseTurn("computer");
-		controller.updateScore(0);
-		view.userCantChoose();
 	}
-}; // End of controller
 
+
+}; // End of controller
 
 
 
@@ -242,6 +236,7 @@ var view = {
   		}
 	},
 
+	// Counter flashes "X" when user guesses wrong. Afterwards, have computer repeat it's moves
 	flashWrongChoice: function() {
   		var counter = 1;
   		$(".count-text").html("X");
@@ -274,12 +269,12 @@ var view = {
 		$(".start .btn-custom").off("click");
 	},
 
+	// Have the computer flash it's moves
 	flashComputerMoves: function() {
 		var moves = controller.getComputerMoves();
 		view.renderScore();
 		console.log("Computer Moves: " + moves);
 		console.log("--------------------------------");
-		// console.log(moves);
 		var integer = 0;
 		var flashColor = '';
 		var timeInterval = setInterval(function(){
@@ -288,6 +283,7 @@ var view = {
 		    $("." + button).addClass(flashColorClass);
 		    view.singleFlash(button, flashColorClass);
 		    integer++;
+		    // Have user repeat the moves once they are all shown.
 		    if(integer === moves.length) {
 		        clearInterval(timeInterval);
 		        controller.userMove();
@@ -298,6 +294,15 @@ var view = {
 	singleFlash: function(button, flashColorClass) {
 		setTimeout(function(){$("." + button).removeClass(flashColorClass);}, 1000);
 	},
+
+	renderScore: function() {
+		var currentScore = controller.getScore();
+		$(".count-text").html(currentScore);
+	},
+
+
+/* Functions related to letting or denying the user the right to pick moves
+===========================================================================*/
 
 	addPointerClasses: function() {
 		$(".color-choice").addClass("pointer");
@@ -329,12 +334,12 @@ var view = {
 
 	removePointerClasses: function() {
 		$(".color-choice").removeClass("pointer");
-	},
-
-	renderScore: function() {
-		var currentScore = controller.getScore();
-		$(".count-text").html(currentScore);
 	}
+
+
 }; // End of view
 
+
+
+// Initialize at beginning
 controller.init();
