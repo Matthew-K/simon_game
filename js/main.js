@@ -180,13 +180,15 @@ var controller = {
 		var computerMoves = controller.getComputerMoves();
 		// If the user's move doesn't match the computer's, flash "X".
 		if (userMoves[index] !== computerMoves[index]) {
-			// if (controller.getStrict() === "on") {
-				// console.log("Strict is on");
-			// } else {
+			if (controller.getStrict() === "on") {
+				console.log("Strict is on");
+				controller.resetGame();
+				view.flashWrongChoice();
+			} else {
 				controller.updateUserMoves("reset");
 				view.userCantChoose();
 				view.flashWrongChoice();
-			// }
+			}
 		// If the user has matched all the moves, update the score and have the computer add another move.
 		} else if (controller.getUserMoves().length === controller.getComputerMoves().length) {
 			controller.updateWhoseTurn("computer");
@@ -285,7 +287,13 @@ var view = {
   		    if(counter === 3) {
   		        clearInterval(interval);
   		        controller.updateWhoseTurn("user");
-  		        view.flashComputerMoves();
+  		        if (controller.getStrict() === "on") {
+  		        	controller.updateScore(1);
+  		        	controller.computerMove();
+  		        }
+  		        else {
+  		        	view.flashComputerMoves();
+  		        }
   		    } else {
   		        counter++;
   		    }
