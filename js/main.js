@@ -6,6 +6,9 @@ var data = {
 	// "on" or "off"
 	power: "off",
 
+	// "on" or "off"
+	strict: "off",
+
 	// "computer" or "user"
 	whoseTurn: "computer",
 
@@ -45,6 +48,10 @@ var controller = {
 		data.power = offOrOn;
 	},
 
+	updateStrict: function(offorOn) {
+		data.strict = offorOn;
+	},
+
 	updateWhoseTurn: function(whoseTurn) {
 		data.whoseTurn = whoseTurn;
 	},
@@ -69,13 +76,17 @@ var controller = {
 		data.score = num;
 	},
 
+
+/* Get functions - Get data from data object
+===========================================================================*/
+
 	getPower: function() {
 		return data.power;
 	},
 
-
-/* Get functions - Get data from data object
-===========================================================================*/
+	getStrict: function() {
+		return data.strict;
+	},
 
 	getWhoseTurn: function() {
 		return data.whoseTurn;
@@ -169,9 +180,13 @@ var controller = {
 		var computerMoves = controller.getComputerMoves();
 		// If the user's move doesn't match the computer's, flash "X".
 		if (userMoves[index] !== computerMoves[index]) {
-			controller.updateUserMoves("reset");
-			view.userCantChoose();
-			view.flashWrongChoice();
+			// if (controller.getStrict() === "on") {
+				// console.log("Strict is on");
+			// } else {
+				controller.updateUserMoves("reset");
+				view.userCantChoose();
+				view.flashWrongChoice();
+			// }
 		// If the user has matched all the moves, update the score and have the computer add another move.
 		} else if (controller.getUserMoves().length === controller.getComputerMoves().length) {
 			controller.updateWhoseTurn("computer");
@@ -212,6 +227,25 @@ var view = {
 			controller.resetGame();
 			view.flashStart();
 		});
+	},
+
+	strictButtonClickHandler: function() {
+		$(".strict .btn-custom").on("click", function() {
+			if (controller.getStrict() === "off") {
+				controller.updateStrict("on");
+			} else {
+				controller.updateStrict("off");
+			}
+			view.renderStrictLight();
+		});
+	},
+
+	renderStrictLight: function() {
+		if (controller.getStrict() === "on") {
+			$(".strict .light").css("background", "#d32f2f");
+		} else if (controller.getStrict() === "off") {
+			$(".strict .light").css("background", "#1a1a1a");
+		}
 	},
 
 	// Counter flashes when start button is clicked
@@ -261,12 +295,17 @@ var view = {
 	powerOn: function() {
 		$(".count").addClass("on");	
 		view.startButtonClickHandler();
+		view.strictButtonClickHandler();
 	},
 
+	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	// Functionality needs to be improved
+	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	powerOff: function() {
 		$(".count-text").html("--");
 		$(".count").removeClass("on");
 		$(".start .btn-custom").off("click");
+		$(".strict .btn-custom").off("click");
 	},
 
 	// Have the computer flash it's moves
