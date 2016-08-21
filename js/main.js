@@ -50,6 +50,7 @@ var controller = {
 
 	updateStrict: function(offorOn) {
 		data.strict = offorOn;
+		view.renderStrictLight();
 	},
 
 	updateWhoseTurn: function(whoseTurn) {
@@ -147,6 +148,9 @@ var controller = {
 ===========================================================================*/
 
 	userMove: function() {
+		if(controller.getPower() === "off") {
+			return;
+		}
 		controller.updateUserMoves("reset");
 		view.addPointerClasses();
 		view.addActiveClasses();
@@ -173,6 +177,9 @@ var controller = {
 	},
 
 	updateAndCheckUserMove: function(move, index) {
+		if(controller.getPower() === "off") {
+			return;
+		}
 		controller.updateUserMoves(move);
 		console.log("User Moves: " + data.userMoves);
 		console.log("--------------------------------");
@@ -238,7 +245,6 @@ var view = {
 			} else {
 				controller.updateStrict("off");
 			}
-			view.renderStrictLight();
 		});
 	},
 
@@ -260,6 +266,10 @@ var view = {
   			start();
   		}, 400);
   		function start() {
+  			if(controller.getPower() === "off") {
+  				clearInterval(interval);
+  				return;
+  			}
   			$('.count-text').fadeOut(150);
     		$('.count-text').fadeIn(150);
     		// When the flashing is over, clear the interval and have the computer start its first move.
@@ -281,6 +291,10 @@ var view = {
   			start();
   		}, 400);
   		function start() {
+  			if(controller.getPower() === "off") {
+  				clearInterval(interval);
+  				return;
+  			}
   			$('.count-text').fadeOut(150);
     		$('.count-text').fadeIn(150);
     		// When the flashing is over, clear the interval and have the computer start its first move.
@@ -306,14 +320,16 @@ var view = {
 		view.strictButtonClickHandler();
 	},
 
-	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	// Functionality needs to be improved
-	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	powerOff: function() {
+		controller.resetGame();
 		$(".count-text").html("--");
 		$(".count").removeClass("on");
 		$(".start .btn-custom").off("click");
 		$(".strict .btn-custom").off("click");
+		controller.updateStrict('off');
+		view.renderStrictLight();
+		view.userCantChoose();
+		view.removeBrightColorClasses();
 	},
 
 	// Have the computer flash it's moves
@@ -325,6 +341,10 @@ var view = {
 		var integer = 0;
 		var flashColor = '';
 		var timeInterval = setInterval(function(){
+			if(controller.getPower() === "off") {
+				clearInterval(timeInterval);
+				return;
+			}
 		    var button = moves[integer];
 			var flashColorClass = controller.chooseFlashColor(moves[integer]);
 		    $("." + button).addClass(flashColorClass);
@@ -339,6 +359,9 @@ var view = {
 	},
 
 	singleFlash: function(button, flashColorClass) {
+		if(controller.getPower() === "off") {
+			return;
+		}
 		setTimeout(function(){$("." + button).removeClass(flashColorClass);}, 1000);
 	},
 
@@ -347,6 +370,12 @@ var view = {
 		$(".count-text").html(currentScore);
 	},
 
+	removeBrightColorClasses: function() {
+		$(".top-left").removeClass("bright-green");
+		$(".top-right").removeClass("bright-red");
+		$(".bottom-left").removeClass("bright-yellow");
+		$(".bottom-right").removeClass("bright-blue");
+	},
 
 /* Functions related to letting or denying the user the right to pick moves
 ===========================================================================*/
