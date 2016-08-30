@@ -18,7 +18,7 @@ var data = {
 
 	score: 0,
 
-	winningScore: 10
+	winningScore: 20
 
 }; // End of data
 
@@ -195,14 +195,13 @@ var controller = {
 			return;
 		}
 		controller.updateUserMoves(move);
-		console.log("User Moves: " + data.userMoves);
-		console.log("--------------------------------");
+		// console.log("User Moves: " + data.userMoves);
+		// console.log("--------------------------------");
 		var userMoves = controller.getUserMoves();
 		var computerMoves = controller.getComputerMoves();
 		// If the user's move doesn't match the computer's, flash "X".
 		if (userMoves[index] !== computerMoves[index]) {
 			if (controller.getStrict() === "on") {
-				console.log("Strict is on");
 				controller.resetGame();
 				view.flashWrongChoice();
 			} else {
@@ -215,9 +214,10 @@ var controller = {
 			controller.updateWhoseTurn("computer");
 			view.userCantChoose();
 			controller.updateScore(controller.getScore() + 1);
+			// If you user completes data.winningScore moves (wins the game)
 			if (controller.getScore() === controller.getWinningScore() + 1) {
+				view.winningSound.play();
 				view.flashWinner();
-				console.log("Winner!");
 			} else {
 				controller.computerMove();
 			}
@@ -252,6 +252,10 @@ var view = {
 	sound2: new buzz.sound("sounds/simonSound2.mp3"),
 	sound3: new buzz.sound("sounds/simonSound3.mp3"),
 	sound4: new buzz.sound("sounds/simonSound4.mp3"),
+	winningSound: new buzz.sound("sounds/winningSound.mp3", {
+    		volume: 30,
+	}),
+
 
 	playSound: function(button) {
 		switch(button) {
@@ -414,8 +418,8 @@ var view = {
 	flashComputerMoves: function() {
 		var moves = controller.getComputerMoves();
 		view.renderScore();
-		console.log("Computer Moves: " + moves);
-		console.log("--------------------------------");
+		// console.log("Computer Moves: " + moves);
+		// console.log("--------------------------------");
 		var integer = 0;
 		var flashColor = '';
 		var timeInterval = setInterval(function(){
@@ -443,7 +447,6 @@ var view = {
 		}
 		setTimeout(function() {
 			$("." + button).removeClass(flashColorClass);
-			console.log(button);
 		}, 1000);
 	},
 
