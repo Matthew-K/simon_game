@@ -16,7 +16,9 @@ var data = {
 
 	userMoves: [],
 
-	score: 0
+	score: 0,
+
+	winningScore: 10
 
 }; // End of data
 
@@ -103,6 +105,10 @@ var controller = {
 
 	getScore: function() {
 		return data.score;
+	},
+
+	getWinningScore: function() {
+		return data.winningScore;
 	},
 
 
@@ -201,7 +207,13 @@ var controller = {
 			controller.updateWhoseTurn("computer");
 			view.userCantChoose();
 			controller.updateScore(controller.getScore() + 1);
-			controller.computerMove();
+			if (controller.getScore() === controller.getWinningScore() + 1) {
+				view.flashWinner();
+				console.log("Winner!");
+			} else {
+				controller.computerMove();
+			}
+			
 		}
 	}
 
@@ -215,12 +227,13 @@ var controller = {
 ====================================================================================================*/
 var view = {
 
-	flashStartInterval: null,
-	flashWrongChoiceInterval: null,
+	startInterval: null,
+	wrongChoiceInterval: null,
+	winningChoiceInterval: null,
 
 	clearAllIntervals: function() {
-		clearInterval(view.flashStartInterval);
-		clearInterval(view.flashWrongChoiceInterval);
+		clearInterval(view.startInterval);
+		clearInterval(view.wrongChoiceInterval);
 	},
 
 	init: function() {
@@ -271,19 +284,19 @@ var view = {
   		var counter = 1;
   		$(".count-text").html("--");
   		// start();
-  		view.flashStartInterval = setInterval(function() {
+  		view.startInterval = setInterval(function() {
   			start();
   		}, 400);
   		function start() {
   			if(controller.getPower() === "off") {
-  				clearInterval(view.flashStartInterval);
+  				clearInterval(view.startInterval);
   				return;
   			}
   			$('.count-text').fadeOut(150);
     		$('.count-text').fadeIn(150);
     		// When the flashing is over, clear the interval and have the computer start its first move.
   		    if(counter === 3) {
-  		        clearInterval(view.flashStartInterval);
+  		        clearInterval(view.startInterval);
   		        controller.computerMove();
   		    } else {
   		        counter++;
@@ -296,19 +309,19 @@ var view = {
   		var counter = 1;
   		$(".count-text").html("X");
   		start();
-  		view.flashWrongChoiceInterval = setInterval(function() {
+  		view.wrongChoiceInterval = setInterval(function() {
   			start();
   		}, 400);
   		function start() {
   			if(controller.getPower() === "off") {
-  				clearInterval(view.flashWrongChoiceInterval);
+  				clearInterval(view.wrongChoiceInterval);
   				return;
   			}
   			$('.count-text').fadeOut(150);
     		$('.count-text').fadeIn(150);
     		// When the flashing is over, clear the interval and have the computer start its first move.
   		    if(counter === 3) {
-  		        clearInterval(view.flashWrongChoiceInterval);
+  		        clearInterval(view.wrongChoiceInterval);
   		        controller.updateWhoseTurn("user");
   		        if (controller.getStrict() === "on") {
   		        	controller.updateScore(1);
@@ -317,6 +330,32 @@ var view = {
   		        else {
   		        	view.flashComputerMoves();
   		        }
+  		    } else {
+  		        counter++;
+  		    }
+  		}
+	},
+
+	// Counter flashes "!!" when user has completed the data.winningScore moves
+	flashWinner: function() {
+  		var counter = 1;
+  		$(".count-text").html("!!");
+  		start();
+  		view.winningChoiceInterval = setInterval(function() {
+  			start();
+  		}, 400);
+  		function start() {
+  			if(controller.getPower() === "off") {
+  				clearInterval(view.winningChoiceInterval);
+  				return;
+  			}
+  			$('.count-text').fadeOut(150);
+    		$('.count-text').fadeIn(150);
+    		// When the flashing is over, clear the interval and have the computer start its first move.
+  		    if(counter === 7) {
+  		        clearInterval(view.winningChoiceInterval);
+  		        controller.resetGame();
+  		        view.flashStart();
   		    } else {
   		        counter++;
   		    }
