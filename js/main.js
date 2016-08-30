@@ -215,6 +215,14 @@ var controller = {
 ====================================================================================================*/
 var view = {
 
+	flashStartInterval: null,
+	flashWrongChoiceInterval: null,
+
+	clearAllIntervals: function() {
+		clearInterval(view.flashStartInterval);
+		clearInterval(view.flashWrongChoiceInterval);
+	},
+
 	init: function() {
 		view.powerButtonClickHandler();
 	},
@@ -234,6 +242,7 @@ var view = {
 	startButtonClickHandler: function() {
 		$(".start .btn-custom").on("click", function() {
 			controller.resetGame();
+			view.clearAllIntervals();
 			view.flashStart();
 		});
 	},
@@ -261,20 +270,20 @@ var view = {
   		controller.updateScore(1);
   		var counter = 1;
   		$(".count-text").html("--");
-  		start();
-  		var interval = setInterval(function() {
+  		// start();
+  		view.flashStartInterval = setInterval(function() {
   			start();
   		}, 400);
   		function start() {
   			if(controller.getPower() === "off") {
-  				clearInterval(interval);
+  				clearInterval(view.flashStartInterval);
   				return;
   			}
   			$('.count-text').fadeOut(150);
     		$('.count-text').fadeIn(150);
     		// When the flashing is over, clear the interval and have the computer start its first move.
   		    if(counter === 3) {
-  		        clearInterval(interval);
+  		        clearInterval(view.flashStartInterval);
   		        controller.computerMove();
   		    } else {
   		        counter++;
@@ -287,19 +296,19 @@ var view = {
   		var counter = 1;
   		$(".count-text").html("X");
   		start();
-  		var interval = setInterval(function() {
+  		view.flashWrongChoiceInterval = setInterval(function() {
   			start();
   		}, 400);
   		function start() {
   			if(controller.getPower() === "off") {
-  				clearInterval(interval);
+  				clearInterval(view.flashWrongChoiceInterval);
   				return;
   			}
   			$('.count-text').fadeOut(150);
     		$('.count-text').fadeIn(150);
     		// When the flashing is over, clear the interval and have the computer start its first move.
   		    if(counter === 3) {
-  		        clearInterval(interval);
+  		        clearInterval(view.flashWrongChoiceInterval);
   		        controller.updateWhoseTurn("user");
   		        if (controller.getStrict() === "on") {
   		        	controller.updateScore(1);
