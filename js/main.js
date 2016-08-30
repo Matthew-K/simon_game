@@ -166,19 +166,27 @@ var controller = {
 	currentMove: function() {
 		$(".top-left").on("click", function() {
 			var index = controller.getUserMoves().length;
-			controller.updateAndCheckUserMove("top-left", index);
+			var button = "top-left";
+			view.playSound(button);
+			controller.updateAndCheckUserMove(button, index);
 		});
 		$(".top-right").on("click", function() {
 			var index = controller.getUserMoves().length;
-			controller.updateAndCheckUserMove("top-right", index);
+			var button = "top-right";
+			view.playSound(button);
+			controller.updateAndCheckUserMove(button, index);
 		});
 		$(".bottom-left").on("click", function() {
 			var index = controller.getUserMoves().length;
-			controller.updateAndCheckUserMove("bottom-left", index);
+			var button = "bottom-left";
+			view.playSound(button);
+			controller.updateAndCheckUserMove(button, index);
 		});
 		$(".bottom-right").on("click", function() {
 			var index = controller.getUserMoves().length;
-			controller.updateAndCheckUserMove("bottom-right", index);
+			var button = "bottom-right";
+			view.playSound(button);
+			controller.updateAndCheckUserMove(button, index);
 		});
 	},
 
@@ -227,6 +235,10 @@ var controller = {
 ====================================================================================================*/
 var view = {
 
+	init: function() {
+		view.powerButtonClickHandler();
+	},
+
 	startInterval: null,
 	wrongChoiceInterval: null,
 	winningChoiceInterval: null,
@@ -236,8 +248,26 @@ var view = {
 		clearInterval(view.wrongChoiceInterval);
 	},
 
-	init: function() {
-		view.powerButtonClickHandler();
+	sound1: new buzz.sound("sounds/simonSound1.mp3"),
+	sound2: new buzz.sound("sounds/simonSound2.mp3"),
+	sound3: new buzz.sound("sounds/simonSound3.mp3"),
+	sound4: new buzz.sound("sounds/simonSound4.mp3"),
+
+	playSound: function(button) {
+		switch(button) {
+			case "top-left":
+				view.sound1.play();
+				break;
+			case "top-right":
+				view.sound2.play();
+				break;
+			case "bottom-left":
+				view.sound3.play();
+				break;
+			case "bottom-right":
+				view.sound4.play();
+				break;
+		}
 	},
 
 	powerButtonClickHandler: function() {
@@ -396,6 +426,7 @@ var view = {
 		    var button = moves[integer];
 			var flashColorClass = controller.chooseFlashColor(moves[integer]);
 		    $("." + button).addClass(flashColorClass);
+		    view.playSound(button);
 		    view.singleFlash(button, flashColorClass);
 		    integer++;
 		    // Have user repeat the moves once they are all shown.
@@ -410,7 +441,10 @@ var view = {
 		if(controller.getPower() === "off") {
 			return;
 		}
-		setTimeout(function(){$("." + button).removeClass(flashColorClass);}, 1000);
+		setTimeout(function() {
+			$("." + button).removeClass(flashColorClass);
+			console.log(button);
+		}, 1000);
 	},
 
 	renderScore: function() {
